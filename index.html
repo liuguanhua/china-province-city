@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <li>省：<select name="province" id="province"></select></li>
+      <li>市：<select name="city" id="city"></select></li>
+      <li>县：<select name="county" id="county"></select></li>
+      <li>镇：<select name="town" id="town"></select></li>
+    </ul>
+    <script>
+      ;(function () {
+        const info = {}
+        const matchFields = {
+          1: 'province',
+          2: 'city',
+          3: 'county',
+          4: 'town',
+          5: 'village',
+        }
+        function request(url) {
+          return fetch(url).then((response) => response.json())
+        }
+
+        function getOption(data, level = 1) {
+          const name = matchFields[level]
+          info[name] = info[name] || {}
+          return data
+            .map((item) => {
+              info[name][item.code] = item.children
+              return (
+                '<option value="' + item.code + '">' + item.name + '</option>'
+              )
+            })
+            .join('')
+        }
+        function renderOption({ id, tpl, change }) {
+          const elSelect = document.querySelector('#' + id)
+          if (!elSelect) {
+            return
+          }
+          elSelect.innerHTML = tpl
+          elSelect.parentNode.style.display = tpl ? 'block' : 'none'
+          function eventHandler(e) {
+            const code = e.target.value
+            change && change(code)
+          }
+          elSelect.removeEventListener('change', eventHandler)
+          elSelect.addEventListener('change', eventHandler, false)
+          if (change) {
+            const elOption = elSelect.querySelector('option')
+            elOption && change(elOption.value)
+          }
+        }
+
+        function renderTpl({ level = 1, maxLevel = 1, data = [] }) {
+          const name = matchFields[level]
+          renderOption({
+            id: name,
+            tpl: getOption(data, level),
+            change(code) {
+              if (level > maxLevel) {
+                return
+              }
+              renderTpl({
+                level: level + 1,
+                maxLevel,
+                data: info[name][code],
+              })
+            },
+          })
+        }
+
+        request('./data/tree.json').then((data) => {
+          // const Items = {}
+          // Items[0] = data.map((item) => item.name)
+          // data.forEach((item, index) => {
+          //   Items[`0_${index}`] = item.children.map((cur, key) => {
+          //     Items[`0_${index}_${key}`] = cur.children.map((item) => item.name)
+          //     return cur.name
+          //   })
+          // })
+          renderTpl({ data, maxLevel: 4 })
+        })
+      })()
+    </script>
+  </body>
+</html>

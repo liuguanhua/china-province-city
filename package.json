@@ -1,0 +1,24 @@
+{
+  "name": "geo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=start node main",
+    "build": "cross-env NODE_ENV=build node main",
+    "compress": "cross-env NODE_ENV=compress node main"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "cheerio": "^1.0.0-rc.12",
+    "cross-env": "^7.0.3",
+    "fs": "^0.0.1-security",
+    "hirestime": "^7.0.3",
+    "https": "^1.0.0",
+    "request": "^2.88.2"
+  }
+}
