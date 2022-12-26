@@ -39,6 +39,7 @@ const hirestime = require('hirestime');
     4: 'towntr',
     5: 'villagetr',
   }
+
   function readFile (dir, defaultValue) {
     const pathFile = path.resolve(__dirname, dir);
     return new Promise((resolve, reject) => {
@@ -51,6 +52,36 @@ const hirestime = require('hirestime');
         } else {
           resolve(data ? JSON.parse(data) : (defaultValue || {}))
         }
+      })
+    })
+  }
+
+  function flatten (data) {
+    return data.flatMap((item) => item)
+  }
+
+  function isVaildArray (data) {
+    return Array.isArray(data) && Boolean(data.length)
+  }
+
+  function sleep (d) {
+    const t = new Date().getTime();
+    while (new Date().getTime() - t <= d) { }
+  }
+
+  function request (opts) {
+    return new Promise((resolve, reject) => {
+      axios({
+        maxRedirects: 0,
+        ...opts,
+      }).then(response => {
+        resolve({
+          ...response,
+          isOk: response.status === 200
+        })
+      }).catch(err => {
+        console.log(err)
+        reject(err)
       })
     })
   }
@@ -88,7 +119,7 @@ const hirestime = require('hirestime');
       for (let index = 0; index < mergeMatchFields.length; index++) {
         const field = mergeMatchFields[index];
         let data = await readFile(`./temp/${field}.json`)
-        data = this.flatten(Object.values(data)).map(({ name, code, province = {}, city = {}, county = {}, town = {} }) => ({ name, code, province: province.code, city: city.code, county: county.code, town: town.code }))
+        data = flatten(Object.values(data)).map(({ name, code, province = {}, city = {}, county = {}, town = {} }) => ({ name, code, province: province.code, city: city.code, county: county.code, town: town.code }))
         info[field] = data
         await this.writeData({ data: data, dir: 'data', fileName: field })
       }
@@ -147,7 +178,7 @@ const hirestime = require('hirestime');
       const getElapsed = hirestime()
       const name = matchHMTFields[level]
       let result = await readFile(`./temp/${name}.json`, [])
-      if (!this.isVaildArray(result)) {
+      if (!isVaildArray(result)) {
         result = await this.getHMT(1, { level })
       }
       await this.writeExecTime(level, getElapsed.ms(), true)
@@ -191,16 +222,20 @@ const hirestime = require('hirestime');
         await this.writeData({ data: error, fileName: `${name}_error`, message: `数据【${item.name}】Error 输出成功！` })
       }
       await this.writeExecTime(level, getElapsed.ms(), true)
-      return this.flatten(Object.values(result))
+      return flatten(Object.values(result))
     },
     getHMT (id, { level, extra = {} }) {
       return new Promise((resolve, reject) => {
-        this.request({
+        request({
           url: `${hmtUrl}?id=${id}`
         }).then(async (response) => {
           if (!response.isOk) {
             return reject({
-              response
+              response,
+              opts: {
+                id,
+                ...extra
+              }
             })
           }
           let data = response.data.data || []
@@ -215,7 +250,11 @@ const hirestime = require('hirestime');
           }))))
         }).catch((response) => {
           reject({
-            response
+            response,
+            opts: {
+              id,
+              ...extra
+            }
           })
         })
       })
@@ -223,14 +262,15 @@ const hirestime = require('hirestime');
     async getProvince () {
       const level = 1
       const getElapsed = hirestime()
-      let result = await readFile('./temp/province.json', [])
-      if (!this.isVaildArray(result)) {
+      const name = matchFields[level]
+      let result = await readFile(`./temp/${name}.json`, [])
+      if (!isVaildArray(result)) {
         result = await this.getData('index.html', {
           level,
         })
       }
       await this.writeExecTime(level, getElapsed.ms())
-      await this.writeData({ data: result, fileName: 'province' })
+      await this.writeData({ data: result, fileName: name })
       return result
     },
     async getNextData (data, level = 2) {
@@ -285,13 +325,7 @@ const hirestime = require('hirestime');
         await this.writeData({ data: error, fileName: `${name}_error`, message: `数据【${item.name}】Error 输出成功！` })
       }
       await this.writeExecTime(level, getElapsed.ms())
-      return this.flatten(Object.values(result))
-    },
-    flatten (data) {
-      return data.flatMap((item) => item)
-    },
-    isVaildArray (data) {
-      return Array.isArray(data) && Boolean(data.length)
+      return flatten(Object.values(result))
     },
     async writeExecTime (level = 1, time, isHMT) {
       const name = {
@@ -318,10 +352,6 @@ const hirestime = require('hirestime');
         })
       })
     },
-    sleep (d) {
-      const t = new Date().getTime();
-      while (new Date().getTime() - t <= d) { }
-    },
     splitUrl (level, url) {
       //根据链接规则拼接成地址 例：632725203.html => 63/27/25/632725203.html
       if (level < 3) {
@@ -335,25 +365,9 @@ const hirestime = require('hirestime');
         return info
       }, []).join('/') + `/${url}`;
     },
-    request (opts) {
-      return new Promise((resolve, reject) => {
-        axios({
-          maxRedirects: 0,
-          ...opts,
-        }).then(response => {
-          resolve({
-            ...response,
-            isOk: response.status === 200
-          })
-        }).catch(err => {
-          console.log(err)
-          reject(err)
-        })
-      })
-    },
     getData (link, opts = {}) {
       opts.extra = opts.extra || {}
-      // this.sleep(500)
+      // sleep(500)
       return new Promise((resolve, reject) => {
         if (!link || opts.cacheLevel && opts.level > opts.cacheLevel) {
           return resolve([])
@@ -362,7 +376,7 @@ const hirestime = require('hirestime');
         opts.currentLevel = opts.currentLevel || 1
         link = this.splitUrl(opts.currentLevel, link)
         const className = matchClassNames[opts.currentLevel]
-        this.request({
+        request({
           url: `${url}/${year}/${link}`
         })
           .then(async response => {
@@ -421,7 +435,11 @@ const hirestime = require('hirestime');
             resolve(data);
           }).catch((response) => {
             reject({
-              response
+              response,
+              opts: {
+                link,
+                ...opts.extra
+              }
             })
           })
       })
