@@ -33,29 +33,30 @@
           return data
             .map((item) => {
               info[name][item.code] = item.children
-              return (
-                '<option value="' + item.code + '">' + item.name + '</option>'
-              )
+              return `<option value="${item.code}">${item.name}</option>`
             })
             .join('')
         }
-        function renderOption({ id, tpl, change }) {
-          const elSelect = document.querySelector('#' + id)
+
+        function renderOption({ id, tpl, change = () => {} }) {
+          const elSelect = document.querySelector(`#${id}`)
           if (!elSelect) {
             return
           }
           elSelect.innerHTML = tpl
           elSelect.parentNode.style.display = tpl ? 'block' : 'none'
-          function eventHandler(e) {
-            const code = e.target.value
-            change && change(code)
-          }
-          elSelect.removeEventListener('change', eventHandler)
-          elSelect.addEventListener('change', eventHandler, false)
-          if (change) {
-            const elOption = elSelect.querySelector('option')
-            elOption && change(elOption.value)
-          }
+
+          const funKey = `${id}EventHandler`
+          info[funKey] =
+            info[funKey] ||
+            function (e) {
+              const code = e.target.value
+              change(code)
+            }
+          const elOption = elSelect.querySelector('option')
+          elSelect.removeEventListener('change', info[funKey], false)
+          elSelect.addEventListener('change', info[funKey], false)
+          elOption && change(elOption.value)
         }
 
         function renderTpl({ level = 1, maxLevel = 1, data = [] }) {
@@ -77,14 +78,6 @@
         }
 
         request('./data/tree.json').then((data) => {
-          // const Items = {}
-          // Items[0] = data.map((item) => item.name)
-          // data.forEach((item, index) => {
-          //   Items[`0_${index}`] = item.children.map((cur, key) => {
-          //     Items[`0_${index}_${key}`] = cur.children.map((item) => item.name)
-          //     return cur.name
-          //   })
-          // })
           renderTpl({ data, maxLevel: 4 })
         })
       })()
