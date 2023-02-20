@@ -7,18 +7,21 @@ const hirestime = require('hirestime');
 /**
  * 统计耗时
   {
-    "province": "97.25ms",
-    "city": "1961.33ms",
-    "county": "32694.27ms",
-    "town": "641760.29ms",
-    "total": "676540.1ms"
+    "hmt_1": "237.55ms",
+    "hmt_2": "450.43ms",
+    "hmt_3": "4155.04ms",
+    "province": "57.28ms",
+    "city": "4913.39ms",
+    "county": "60279.46ms",
+    "town": "1083777.33ms",
+    "total": "1153904.37ms"
   }
 */
 
 ; (function () {
   const url = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm'
   const hmtUrl = 'https://query.aliyun.com/rest/sell.getDivisions' //阿里云控制台新增地址
-  const year = 2021
+  const year = 2022
   const matchFields = {
     1: 'province',
     2: 'city',
@@ -280,12 +283,15 @@ const hirestime = require('hirestime');
         return []
       }
       const result = await readFile(`./temp/${name}.json`)
+      const noChildName = 'no_child'
+      const noChildResult = await readFile(`./temp/${noChildName}.json`) //整合没有下级的数据，方便比较是否获取数据失败
       const error = {}
       for (let index = 0; index < data.length; index++) {
         const item = data[index];
         if (result[item.code]) {
           continue;
         }
+        sleep(100)
         console.log('当前进度', `${index}/${data.length}`);
         try {
           const extra = {
@@ -318,10 +324,14 @@ const hirestime = require('hirestime');
             extra
           })
           result[item.code] = response
+          if (!isVaildArray(response) && level != 5) {//第5级没有下级
+            noChildResult[item.code] = extra
+          }
         } catch (err) {
           error[item.code] = err.opts
         }
         await this.writeData({ data: result, fileName: name, message: `数据【${item.name}】输出成功！` })
+        await this.writeData({ data: noChildResult, fileName: noChildName, message: `数据【${noChildName}】输出成功！` })
         await this.writeData({ data: error, fileName: `${name}_error`, message: `数据【${item.name}】Error 输出成功！` })
       }
       await this.writeExecTime(level, getElapsed.ms())
@@ -367,7 +377,6 @@ const hirestime = require('hirestime');
     },
     getData (link, opts = {}) {
       opts.extra = opts.extra || {}
-      // sleep(500)
       return new Promise((resolve, reject) => {
         if (!link || opts.cacheLevel && opts.level > opts.cacheLevel) {
           return resolve([])
@@ -375,7 +384,7 @@ const hirestime = require('hirestime');
         opts.cacheLevel = opts.cacheLevel || opts.level
         opts.currentLevel = opts.currentLevel || 1
         link = this.splitUrl(opts.currentLevel, link)
-        const className = matchClassNames[opts.currentLevel]
+        let className = matchClassNames[opts.currentLevel]
         request({
           url: `${url}/${year}/${link}`
         })
@@ -393,6 +402,11 @@ const hirestime = require('hirestime');
               })
             }
             const $ = cheerio.load(response.data);
+            //广东省东莞市、中山市，海南省儋州市下级区的结构跟其它不一致，需将countytr换成towntr单独处理
+            const { city: extraCity, } = opts.extra
+            if (className == 'countytr' && extraCity && ['441900000000', '442000000000', '460400000000'].includes(extraCity.code)) {
+              className = 'towntr'
+            }
             const $tr = $(`.${className}`)
             const isProvince = opts.currentLevel == 1
             const $doc = isProvince ? $tr.find('td') : $tr
@@ -403,14 +417,14 @@ const hirestime = require('hirestime');
               const $elName = isProvince ? $td : $td.last()
               const link = $elName.find('a').attr('href');
               const res = {
-                name: $elName.text(),
+                name: $elName.text().replace(/^\s+|\s+$/g, ''),
                 url: link,
                 ...opts.level == 5 && {
                   classCode: $td.eq(1).text()
                 },//城乡分类代码
                 ...opts.extra
               }
-              res.code = isProvince ? link.split('.')[0] + '0000000000' : $td.first().text()
+              res.code = isProvince ? link.split('.')[0] + '0000000000' : $td.first().text().replace(/^\s+|\s+$/g, '')
               // console.log('抓取--', link, res.name, `${index}/${$doc.length}`);
               /* //此处可递归生成数据，因效率低，已废弃
               let children = []
