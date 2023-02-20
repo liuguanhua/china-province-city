@@ -13,9 +13,12 @@
       <li>县：<select name="county" id="county"></select></li>
       <li>镇：<select name="town" id="town"></select></li>
     </ul>
+    <div id="resultText"></div>
+    <div id="resultCode"></div>
     <script>
       ;(function () {
         const info = {}
+        const state = {}
         const matchFields = {
           1: 'province',
           2: 'city',
@@ -40,6 +43,16 @@
 
         function renderOption({ id, tpl, change = () => {} }) {
           const elSelect = document.querySelector(`#${id}`)
+          if ((!tpl || !elSelect) && state[id]) {
+            delete state[id]
+          }
+          const list = Object.values(state)
+          document.querySelector('#resultText').innerText = list
+            .map((item) => item.text)
+            .join(' ')
+          document.querySelector('#resultCode').innerText = list
+            .map((item) => item.code)
+            .join(' ')
           if (!elSelect) {
             return
           }
@@ -47,16 +60,15 @@
           elSelect.parentNode.style.display = tpl ? 'block' : 'none'
 
           const funKey = `${id}EventHandler`
-          info[funKey] =
-            info[funKey] ||
-            function (e) {
-              const code = e.target.value
-              change(code)
-            }
           const elOption = elSelect.querySelector('option')
-          elSelect.removeEventListener('change', info[funKey], false)
-          elSelect.addEventListener('change', info[funKey], false)
-          elOption && change(elOption.value)
+          elOption && change(elOption.value, elOption.innerText)
+          if(!info[funKey]){
+            info[funKey] = function (e) {
+              const code = e.target.value
+              change(code, this.options[this.selectedIndex].innerText)
+            }
+            elSelect.addEventListener('change', info[funKey], false)
+          }
         }
 
         function renderTpl({ level = 1, maxLevel = 1, data = [] }) {
@@ -64,7 +76,11 @@
           renderOption({
             id: name,
             tpl: getOption(data, level),
-            change(code) {
+            change(code, text) {
+              state[name] = {
+                code,
+                text,
+              }
               if (level > maxLevel) {
                 return
               }
