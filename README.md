@@ -6,7 +6,7 @@
 
 ## 📚 数据来源
 
-[行政区划代码](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/)，数据已更新至：[2021 年 10 月 31 日](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2021/index.html)<br />
+[行政区划代码](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/)，数据已更新至：[2022 年 12 月 29 日](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2022/index.html)<br />
 港澳台数据来自[阿里云控制台新增地址](https://account.console.aliyun.com/v2/#/basic-info/address)，[接口](https://query.aliyun.com/rest/sell.getDivisions)
 
 ## 📖 下载
@@ -34,7 +34,7 @@
 
 获取数据：
     cd china-province-city
-    先删除缓存：rm -rf temp
+    先删除缓存：rm -f temp/*
     yarn install
     yarn start
 生成：
