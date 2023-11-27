@@ -83,7 +83,7 @@
 
 获取数据：
     cd china-province-city
-    先删除缓存：yarn remove
+    先删除缓存：yarn delete
     yarn install
     yarn start
 生成：
