@@ -6,21 +6,70 @@
 
 ## 📚 数据来源
 
-[行政区划代码](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/)，数据已更新至：[2022 年 12 月 29 日](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2022/index.html)<br />
+[行政区划代码](http://www.stats.gov.cn/sj/tjbz/qhdm/)，数据已更新至：[2023 年 09 月 11 日](http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html)<br />
 港澳台数据来自[阿里云控制台新增地址](https://account.console.aliyun.com/v2/#/basic-info/address)，[接口](https://query.aliyun.com/rest/sell.getDivisions)
 
 ## 📖 下载
-
-| 文件 | 非压缩 | 压缩版 |
-| :-----:| :----: | :----: |
-| 省级 |  [province.json](https://github.com/liuguanhua/china-province-city/blob/master/data/province.json) | [province.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/province.min.json) |
-| 市级 | [city.json](https://github.com/liuguanhua/china-province-city/blob/master/data/city.json) | [city.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/city.min.json) |
-| 县级 | [county.json](https://github.com/liuguanhua/china-province-city/blob/master/data/county.json) | [county.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/county.min.json) |
-| 镇级 | [town.json](https://github.com/liuguanhua/china-province-city/blob/master/data/town.json) | [town.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/town.min.json) |
-| 港澳台1级 | [hmt_1.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_1.json) | [hmt_1.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_1.min.json) |
-| 港澳台2级 | [hmt_2.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_2.json) | [hmt_2.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_1.min.json) |
-| 港澳台3级 | [hmt_3.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_3.json) | [hmt_3.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/hmt_3.min.json) |
-| 总数据 | [tree.json](https://github.com/liuguanhua/china-province-city/blob/master/data/tree.json) | [tree.min.json](https://github.com/liuguanhua/china-province-city/blob/master/data/tree.min.json) |
+<table>
+  <tr>
+    <th>年份</th>
+    <th>文件</th>
+    <th>省级</th>
+    <th>市级</th>
+    <th>县级</th>
+    <th>镇级</th>
+    <th>港澳台1级</th>
+    <th>港澳台2级</th>
+    <th>港澳台3级</th>
+    <th>总数据</th>
+  </tr>
+  <tr>
+      <td rowspan="2">2022</td>
+      <td>非压缩</td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/province.json">province.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/city.json">city.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/county.json">county.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/town.json">town.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_1.json">hmt_1.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_2.json">hmt_2.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_3.json">hmt_3.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/tree.json">tree.json</a></td>
+  </tr>
+  <tr>
+    <td>压缩版</td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/province.min.json">province.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/city.min.json">city.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/county.min.json">county.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/town.min.json">town.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_1.min.json">hmt_1.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_2.min.json">hmt_2.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/hmt_3.min.json">hmt_3.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2022/tree.min.json">tree.min.json</a></td>
+  </tr>
+  <tr>
+      <td rowspan="2">2023</td>
+      <td>非压缩</td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/province.json">province.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/city.json">city.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/county.json">county.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/town.json">town.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_1.json">hmt_1.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_2.json">hmt_2.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_3.json">hmt_3.json</a></td>
+      <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/tree.json">tree.json</a></td>
+  </tr>
+  <tr>
+    <td>压缩版</td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/province.min.json">province.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/city.min.json">city.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/county.min.json">county.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/town.min.json">town.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_1.min.json">hmt_1.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_2.min.json">hmt_2.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/hmt_3.min.json">hmt_3.min.json</a></td>
+    <td><a href="https://github.com/liuguanhua/china-province-city/blob/master/data/2023/tree.min.json">tree.min.json</a></td>
+  </tr>
+</table>
 ## 🏠 主页
 
 [demo](https://github.com/liuguanhua/china-province-city/blob/master/index.html)
@@ -34,7 +83,7 @@
 
 获取数据：
     cd china-province-city
-    先删除缓存：rm -f temp/*
+    先删除缓存：yarn remove
     yarn install
     yarn start
 生成：

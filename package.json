@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=start node main",
     "build": "cross-env NODE_ENV=build node main",
-    "compress": "cross-env NODE_ENV=compress node main"
+    "compress": "cross-env NODE_ENV=compress node main",
+    "remove": "rm -f temp/2023/*"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "fs": "^0.0.1-security",
     "hirestime": "^7.0.3",
     "https": "^1.0.0",
+    "inquirer": "^9.2.12",
     "request": "^2.88.2"
   }
 }

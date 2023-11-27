@@ -19,6 +19,7 @@
       ;(function () {
         const info = {}
         const state = {}
+        const year = 2023
         const matchFields = {
           1: 'province',
           2: 'city',
@@ -93,7 +94,16 @@
           })
         }
 
-        request('./data/tree.json').then((data) => {
+        request(`./data/${year}/tree.json`).then((data) => {
+          const Items = {}
+          Items[0] = data.map((item) => item.name)
+          data.forEach((item, index) => {
+            Items[`0_${index}`] = (item.children || []).map((cur, key) => {
+              Items[`0_${index}_${key}`] = (cur.children || []).map((item) => item.name)
+              return cur.name
+            })
+          })
+          console.log(Items)
           renderTpl({ data, maxLevel: 4 })
         })
       })()

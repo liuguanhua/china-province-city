@@ -1,0 +1,10 @@
+{
+  "hmt_1": "1.2ms",
+  "hmt_2": "16.04ms",
+  "hmt_3": "3.32ms",
+  "province": "21.51ms",
+  "city": "48.16ms",
+  "county": "62.41ms",
+  "town": "592.69ms",
+  "total": "825.24ms"
+}
